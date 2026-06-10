@@ -161,6 +161,8 @@ function validate_content(array $content): void
         'about.heading',
         'news.heading',
         'news.featured.title',
+        'campus.heading',
+        'tender.title',
         'admission.heading',
         'contact.heading'
     ];

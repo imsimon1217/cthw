@@ -2,3 +2,6 @@
 api/config.php
 data/*.sqlite
 data/*.sqlite-*
+assets/uploads/
+assets/campus-library.png
+assets/campus-courtyard.png

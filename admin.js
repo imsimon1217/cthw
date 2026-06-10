@@ -44,6 +44,17 @@ function setValueByPath(source, path, value) {
   target[lastKey] = value;
 }
 
+function ensureDefaultCollections(content) {
+  content.campus ||= {};
+  content.campus.images ||= [];
+  while (content.campus.images.length < 2) {
+    content.campus.images.push({ src: "", alt: "", title: "" });
+  }
+  content.tender ||= {};
+  content.news ||= {};
+  content.news.items ||= [];
+}
+
 function renderNewsEditor(items = []) {
   newsEditor.replaceChildren();
   items.forEach((item, index) => {
@@ -64,7 +75,9 @@ function renderNewsEditor(items = []) {
 }
 
 function fillForm(content) {
+  ensureDefaultCollections(content);
   editorForm.querySelectorAll("[name]").forEach((input) => {
+    if (input.type === "file") return;
     const value = getByPath(content, input.name);
     input.value = typeof value === "string" ? value : "";
   });
@@ -73,7 +86,9 @@ function fillForm(content) {
 
 function collectForm() {
   const nextContent = structuredClone(currentContent);
+  ensureDefaultCollections(nextContent);
   editorForm.querySelectorAll("[name]").forEach((input) => {
+    if (input.type === "file") return;
     setValueByPath(nextContent, input.name, input.value.trim());
   });
   nextContent.news.items = Array.from(newsEditor.querySelectorAll("[data-news-index]")).map((row) => ({
@@ -82,6 +97,28 @@ function collectForm() {
     copy: row.querySelector('[data-news-field="copy"]').value.trim()
   }));
   return nextContent;
+}
+
+async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+  const response = await fetch("api/upload-image.php", {
+    method: "POST",
+    credentials: "same-origin",
+    body: formData
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || "Upload failed");
+  return data.src;
+}
+
+function imageToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 function showToast(message) {
@@ -106,6 +143,7 @@ function downloadJson(content) {
 
 async function initDashboard() {
   currentContent = await loadSiteContent();
+  ensureDefaultCollections(currentContent);
   fillForm(currentContent);
 }
 
@@ -190,6 +228,25 @@ document.querySelector("[data-add-news]")?.addEventListener("click", () => {
     copy: "請輸入內容"
   });
   renderNewsEditor(currentContent.news.items);
+});
+
+editorForm?.addEventListener("change", async (event) => {
+  const input = event.target.closest("[data-image-upload]");
+  if (!input || !input.files?.[0]) return;
+
+  const targetName = input.dataset.imageTarget;
+  const targetInput = editorForm.querySelector(`[name="${targetName}"]`);
+  if (!targetInput) return;
+
+  try {
+    const src = await uploadImage(input.files[0]);
+    targetInput.value = src;
+    showToast("圖片已上載到學校 server。");
+  } catch {
+    const dataUrl = await imageToDataUrl(input.files[0]);
+    targetInput.value = dataUrl;
+    showToast("圖片已暫存到本機預覽。");
+  }
 });
 
 newsEditor?.addEventListener("click", (event) => {

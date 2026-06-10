@@ -42,6 +42,8 @@
             <a href="#hero">首頁主視覺</a>
             <a href="#about">關於趙小</a>
             <a href="#news">最新消息</a>
+            <a href="#campus">校園環境</a>
+            <a href="#tender">招標公告</a>
             <a href="#admission">入學資訊</a>
             <a href="#contact">聯絡提示</a>
           </nav>
@@ -93,6 +95,38 @@
               <div class="news-editor" data-news-editor></div>
               <button type="button" class="outline" data-add-news>新增消息</button>
             </div>
+          </section>
+
+          <section class="panel" id="campus">
+            <h2>校園環境</h2>
+            <label>區塊標題<input name="campus.heading"></label>
+            <label>區塊簡介<textarea name="campus.copy" rows="3"></textarea></label>
+            <div class="subpanel">
+              <h3>圖片一</h3>
+              <label>圖片路徑<input name="campus.images.0.src"></label>
+              <label>替代文字<input name="campus.images.0.alt"></label>
+              <label>圖片標題<input name="campus.images.0.title"></label>
+              <label>上載圖片<input type="file" accept="image/*" data-image-upload data-image-target="campus.images.0.src"></label>
+            </div>
+            <div class="subpanel">
+              <h3>圖片二</h3>
+              <label>圖片路徑<input name="campus.images.1.src"></label>
+              <label>替代文字<input name="campus.images.1.alt"></label>
+              <label>圖片標題<input name="campus.images.1.title"></label>
+              <label>上載圖片<input type="file" accept="image/*" data-image-upload data-image-target="campus.images.1.src"></label>
+            </div>
+          </section>
+
+          <section class="panel" id="tender">
+            <h2>招標及行政公告頁</h2>
+            <label>英文/分類副標<input name="tender.eyebrow"></label>
+            <label>頁面標題<input name="tender.title"></label>
+            <label>頁面摘要<textarea name="tender.summary" rows="3"></textarea></label>
+            <label>頁面圖片路徑<input name="tender.image"></label>
+            <label>圖片替代文字<input name="tender.imageAlt"></label>
+            <label>上載頁面圖片<input type="file" accept="image/*" data-image-upload data-image-target="tender.image"></label>
+            <label>詳細內容<textarea name="tender.content" rows="7"></textarea></label>
+            <label>查詢資料<textarea name="tender.contact" rows="3"></textarea></label>
           </section>
 
           <section class="panel" id="admission">
