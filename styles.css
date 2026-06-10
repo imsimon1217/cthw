@@ -715,6 +715,65 @@ p {
   border-top: 1px solid var(--line);
 }
 
+.article-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.article-list-card {
+  display: grid;
+  gap: 8px;
+  padding: 22px;
+  color: var(--ink);
+  background: #fbfaf6;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.article-list-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+}
+
+.article-list-card span,
+.empty-state {
+  color: var(--ink-soft);
+}
+
+.article-list-card strong {
+  font-size: 1.2rem;
+}
+
+.article-list-card p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.article-detail {
+  background: var(--paper);
+}
+
+.article-body {
+  max-width: 900px;
+  padding: clamp(28px, 5vw, 56px);
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  box-shadow: 0 14px 32px rgba(23, 40, 64, 0.055);
+}
+
+.article-body h2 {
+  font-size: clamp(1.8rem, 3vw, 3rem);
+}
+
+.article-body [data-article-body] {
+  margin-top: 22px;
+  color: var(--ink-soft);
+  white-space: pre-line;
+}
+
 .admission-card {
   display: grid;
   grid-template-columns: 1fr auto;

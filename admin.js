@@ -53,6 +53,21 @@ function ensureDefaultCollections(content) {
   content.tender ||= {};
   content.news ||= {};
   content.news.items ||= [];
+  content.news.items = content.news.items.map((item, index) => ({
+    date: item.date || "最新消息",
+    category: item.category || "news",
+    slug: item.slug || `article-${index + 1}`,
+    title: item.title || "",
+    copy: item.copy || "",
+    content: item.content || item.copy || "",
+    image: item.image || "",
+    linkHref: item.linkHref || "",
+    showOnHome: item.showOnHome !== false
+  }));
+}
+
+function uniqueArticleSlug(index) {
+  return `notice-${Date.now()}-${index + 1}`;
 }
 
 function renderNewsEditor(items = []) {
@@ -62,14 +77,35 @@ function renderNewsEditor(items = []) {
     row.className = "news-item-editor";
     row.dataset.newsIndex = String(index);
     row.innerHTML = `
+      <label>分類
+        <select data-news-field="category">
+          <option value="news">最新消息</option>
+          <option value="school">學校資訊</option>
+          <option value="activity">活動花絮</option>
+          <option value="tender">招標及行政公告</option>
+          <option value="admission">入學資訊</option>
+        </select>
+      </label>
       <label>日期/分類<input data-news-field="date"></label>
+      <label>網址代號<input data-news-field="slug" placeholder="例如 school-open-day"></label>
       <label>標題<input data-news-field="title"></label>
-      <label>內容<textarea data-news-field="copy" rows="3"></textarea></label>
+      <label>首頁摘要<textarea data-news-field="copy" rows="3"></textarea></label>
+      <label>封面圖片路徑<input data-news-field="image"></label>
+      <label>上載封面圖片<input type="file" accept="image/*" data-news-image-upload></label>
+      <label class="checkbox-label"><input type="checkbox" data-news-field="showOnHome"> 在首頁顯示</label>
+      <label class="full-row">詳細內容<textarea data-news-field="content" rows="7"></textarea></label>
+      <label class="full-row">指定連結（留空會自動開文章詳情頁）<input data-news-field="linkHref"></label>
       <button type="button" class="remove-news" data-remove-news aria-label="刪除消息">刪除</button>
     `;
+    row.querySelector('[data-news-field="category"]').value = item.category || "news";
     row.querySelector('[data-news-field="date"]').value = item.date || "";
+    row.querySelector('[data-news-field="slug"]').value = item.slug || "";
     row.querySelector('[data-news-field="title"]').value = item.title || "";
     row.querySelector('[data-news-field="copy"]').value = item.copy || "";
+    row.querySelector('[data-news-field="image"]').value = item.image || "";
+    row.querySelector('[data-news-field="content"]').value = item.content || item.copy || "";
+    row.querySelector('[data-news-field="linkHref"]').value = item.linkHref || "";
+    row.querySelector('[data-news-field="showOnHome"]').checked = item.showOnHome !== false;
     newsEditor.append(row);
   });
 }
@@ -91,11 +127,20 @@ function collectForm() {
     if (input.type === "file") return;
     setValueByPath(nextContent, input.name, input.value.trim());
   });
-  nextContent.news.items = Array.from(newsEditor.querySelectorAll("[data-news-index]")).map((row) => ({
-    date: row.querySelector('[data-news-field="date"]').value.trim(),
-    title: row.querySelector('[data-news-field="title"]').value.trim(),
-    copy: row.querySelector('[data-news-field="copy"]').value.trim()
-  }));
+  nextContent.news.items = Array.from(newsEditor.querySelectorAll("[data-news-index]")).map((row, index) => {
+    const value = (field) => row.querySelector(`[data-news-field="${field}"]`)?.value.trim() || "";
+    return {
+      date: value("date"),
+      category: value("category") || "news",
+      slug: value("slug") || uniqueArticleSlug(index),
+      title: value("title"),
+      copy: value("copy"),
+      content: value("content"),
+      image: value("image"),
+      linkHref: value("linkHref"),
+      showOnHome: row.querySelector('[data-news-field="showOnHome"]')?.checked !== false
+    };
+  });
   return nextContent;
 }
 
@@ -222,15 +267,40 @@ editorForm?.addEventListener("submit", async (event) => {
 
 document.querySelector("[data-add-news]")?.addEventListener("click", () => {
   currentContent = collectForm();
+  const index = currentContent.news.items.length;
   currentContent.news.items.push({
-    date: "新消息",
+    date: "最新消息",
+    category: "news",
+    slug: uniqueArticleSlug(index),
     title: "請輸入標題",
-    copy: "請輸入內容"
+    copy: "請輸入首頁摘要",
+    content: "請輸入詳細內容",
+    image: "",
+    linkHref: "",
+    showOnHome: true
   });
   renderNewsEditor(currentContent.news.items);
 });
 
 editorForm?.addEventListener("change", async (event) => {
+  const newsImageInput = event.target.closest("[data-news-image-upload]");
+  if (newsImageInput?.files?.[0]) {
+    const row = newsImageInput.closest("[data-news-index]");
+    const targetInput = row?.querySelector('[data-news-field="image"]');
+    if (!targetInput) return;
+
+    try {
+      const src = await uploadImage(newsImageInput.files[0]);
+      targetInput.value = src;
+      showToast("文章封面圖片已上載到學校 server。");
+    } catch {
+      const dataUrl = await imageToDataUrl(newsImageInput.files[0]);
+      targetInput.value = dataUrl;
+      showToast("文章封面圖片已暫存到本機預覽。");
+    }
+    return;
+  }
+
   const input = event.target.closest("[data-image-upload]");
   if (!input || !input.files?.[0]) return;
 

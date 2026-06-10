@@ -21,19 +21,34 @@
     "items": [
       {
         "date": "學校資訊",
+        "category": "school",
+        "slug": "school-profile",
         "title": "學校簡介及辦學宗旨",
-        "copy": "認識學校發展、校園設施及學生支援。"
+        "copy": "認識學校發展、校園設施及學生支援。",
+        "content": "仁濟醫院趙曾學韞小學重視學生品德、學業與身心發展，致力營造關愛、積極和有歸屬感的校園。\n\n學校透過多元課程、活動體驗與家校合作，協助學生建立良好學習習慣，發掘個人潛能，並逐步培養面向未來的能力。",
+        "image": "assets/school-logo.png",
+        "showOnHome": true
       },
       {
         "date": "活動花絮",
+        "category": "activity",
+        "slug": "student-learning-life",
         "title": "學生學習成果與校園生活",
-        "copy": "瀏覽學生參與活動、比賽及多元學習經歷。"
+        "copy": "瀏覽學生參與活動、比賽及多元學習經歷。",
+        "content": "學生透過課堂學習、服務、體藝、戶外學習及校本活動，擴闊視野，建立自信與責任感。\n\n學校會持續更新活動花絮，讓家長了解學生在不同學習經歷中的成長。",
+        "image": "assets/official-students-hero-2400.jpg",
+        "showOnHome": true
       },
       {
         "date": "招標",
+        "category": "tender",
+        "slug": "tender-and-admin-notices",
         "title": "招標及行政公告",
         "copy": "查看學校最新招標、採購及行政公告。",
-        "linkHref": "tender.html"
+        "content": "本分類刊登學校招標、採購及行政公告。供應商及公眾可按公告內容查閱詳情，並於辦公時間向學校查詢。",
+        "image": "assets/school-logo.png",
+        "linkHref": "tender.html",
+        "showOnHome": true
       }
     ]
   },

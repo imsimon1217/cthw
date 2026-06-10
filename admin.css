@@ -27,6 +27,7 @@ a {
 
 button,
 input,
+select,
 textarea {
   font: inherit;
 }
@@ -130,6 +131,7 @@ label {
 }
 
 input,
+select,
 textarea {
   width: 100%;
   padding: 12px 13px;
@@ -141,6 +143,7 @@ textarea {
 }
 
 input:focus,
+select:focus,
 textarea:focus {
   border-color: var(--green);
   box-shadow: 0 0 0 3px rgba(33, 117, 104, 0.12);
@@ -281,7 +284,7 @@ textarea {
 
 .news-item-editor {
   display: grid;
-  grid-template-columns: 0.6fr 1fr auto;
+  grid-template-columns: repeat(3, 1fr) auto;
   gap: 12px;
   align-items: start;
   padding: 14px;
@@ -290,8 +293,23 @@ textarea {
   border-radius: 8px;
 }
 
-.news-item-editor label:nth-child(3) {
-  grid-column: 1 / 3;
+.news-item-editor .full-row {
+  grid-column: 1 / 4;
+}
+
+.checkbox-label {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 13px;
+  background: #fbfaf6;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.checkbox-label input {
+  width: auto;
 }
 
 .remove-news {
@@ -352,7 +370,7 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .news-item-editor label:nth-child(3) {
+  .news-item-editor .full-row {
     grid-column: auto;
   }
 }
