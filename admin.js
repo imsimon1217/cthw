@@ -27,11 +27,15 @@ function setLoggedIn(value) {
 function showDashboard() {
   loginPanel.hidden = true;
   dashboard.hidden = false;
+  document.body.classList.add("is-authenticated");
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function showLogin() {
   loginPanel.hidden = false;
   dashboard.hidden = true;
+  document.body.classList.remove("is-authenticated");
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function setValueByPath(source, path, value) {
@@ -341,13 +345,15 @@ document.querySelector("[data-export]")?.addEventListener("click", () => {
   downloadJson(currentContent);
 });
 
-document.querySelector("[data-logout]")?.addEventListener("click", () => {
-  if (serverMode) {
-    apiPost("api/logout.php").catch(() => {});
-  }
-  setLoggedIn(false);
-  serverMode = false;
-  showLogin();
+document.querySelectorAll("[data-logout]").forEach((button) => {
+  button.addEventListener("click", () => {
+    if (serverMode) {
+      apiPost("api/logout.php").catch(() => {});
+    }
+    setLoggedIn(false);
+    serverMode = false;
+    showLogin();
+  });
 });
 
 if (isLoggedIn()) {
