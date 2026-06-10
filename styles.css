@@ -560,6 +560,26 @@ p {
   padding-top: 0;
 }
 
+.campus-section {
+  background: #f7f0e3;
+}
+
+.campus-panel {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(28px, 5vw, 70px);
+  align-items: center;
+  padding: clamp(30px, 5vw, 58px);
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 18px 48px rgba(24, 35, 50, 0.06);
+}
+
+.campus-panel p:last-child {
+  color: var(--ink-soft);
+}
+
 .admission-card {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -753,6 +773,10 @@ p {
   }
 
   .admission-card {
+    grid-template-columns: 1fr;
+  }
+
+  .campus-panel {
     grid-template-columns: 1fr;
   }
 }

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>網站後台 | 仁濟醫院趙曾學韞小學</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&family=Noto+Serif+HK:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+  </head>
+  <body>
+    <main class="admin-shell">
+      <section class="login-panel" data-login-panel>
+        <div>
+          <p class="kicker">YCHCTHWPS CMS</p>
+          <h1>學校網站後台</h1>
+          <p>老師可在這裏更新首頁文字、最新消息、入學資訊及聯絡提示。</p>
+        </div>
+
+        <form class="login-card" data-login-form>
+          <img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學校徽">
+          <label>
+            使用者名稱
+            <input name="username" autocomplete="username" value="teacher" required>
+          </label>
+          <label>
+            密碼
+            <input name="password" type="password" autocomplete="current-password" placeholder="請輸入後台密碼" required>
+          </label>
+          <p class="hint">展示密碼：<strong>ych2026</strong>。正式上線前應由學校 IT 在 server 設定正式帳戶。</p>
+          <p class="error" data-login-error hidden>登入資料不正確。</p>
+          <button type="submit">登入後台</button>
+          <a href="index.html">返回網站首頁</a>
+        </form>
+      </section>
+
+      <section class="dashboard" data-dashboard hidden>
+        <aside class="sidebar">
+          <img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學校徽">
+          <nav aria-label="後台分區">
+            <a href="#hero">首頁主視覺</a>
+            <a href="#about">關於趙小</a>
+            <a href="#news">最新消息</a>
+            <a href="#admission">入學資訊</a>
+            <a href="#contact">聯絡提示</a>
+          </nav>
+          <button type="button" class="ghost" data-logout>登出</button>
+        </aside>
+
+        <form class="editor" data-editor-form>
+          <header class="editor-header">
+            <div>
+              <p class="kicker">Content Editor</p>
+              <h1>更新網站內容</h1>
+            </div>
+            <div class="header-actions">
+              <a class="outline" href="index.html" target="_blank" rel="noreferrer">預覽首頁</a>
+              <button type="button" class="outline" data-reset>重設</button>
+              <button type="submit">儲存</button>
+            </div>
+          </header>
+
+          <p class="notice" data-mode-notice>如果網站放在支援 PHP 的學校 server，後台會把資料寫入 server database；本地靜態預覽時會暫存在目前瀏覽器，方便校方試流程。</p>
+
+          <section class="panel" id="hero">
+            <h2>首頁主視覺</h2>
+            <label>英文副標<input name="hero.eyebrow"></label>
+            <label>主標題<input name="hero.title"></label>
+            <label>首頁簡介<textarea name="hero.copy" rows="3"></textarea></label>
+          </section>
+
+          <section class="panel" id="about">
+            <h2>關於趙小</h2>
+            <label>區塊標題<input name="about.heading"></label>
+            <label>段落一<textarea name="about.paragraph1" rows="3"></textarea></label>
+            <label>段落二<textarea name="about.paragraph2" rows="3"></textarea></label>
+          </section>
+
+          <section class="panel" id="news">
+            <h2>最新消息</h2>
+            <label>區塊標題<input name="news.heading"></label>
+            <div class="subpanel">
+              <h3>重點消息</h3>
+              <label>日期/分類<input name="news.featured.date"></label>
+              <label>標題<input name="news.featured.title"></label>
+              <label>內容<textarea name="news.featured.copy" rows="4"></textarea></label>
+              <label>連結文字<input name="news.featured.linkLabel"></label>
+              <label>連結<input name="news.featured.linkHref"></label>
+            </div>
+            <div class="subpanel">
+              <h3>消息卡片</h3>
+              <div class="news-editor" data-news-editor></div>
+              <button type="button" class="outline" data-add-news>新增消息</button>
+            </div>
+          </section>
+
+          <section class="panel" id="admission">
+            <h2>入學資訊</h2>
+            <label>標題<input name="admission.heading"></label>
+            <label>內容<textarea name="admission.copy" rows="4"></textarea></label>
+          </section>
+
+          <section class="panel" id="contact">
+            <h2>聯絡提示</h2>
+            <label>標題<input name="contact.heading"></label>
+            <label>內容<textarea name="contact.copy" rows="4"></textarea></label>
+          </section>
+
+          <section class="panel export-panel">
+            <h2>匯出正式內容</h2>
+            <p>按下匯出後，會下載一份新的 `site-content.json`。正式網站可把它放回 `data/site-content.json` 取代舊內容。</p>
+            <button type="button" class="outline" data-export>下載 JSON</button>
+          </section>
+        </form>
+      </section>
+    </main>
+
+    <div class="toast" data-toast hidden>已儲存內容。</div>
+
+    <script src="content-manager.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>

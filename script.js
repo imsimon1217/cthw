@@ -33,3 +33,9 @@ window.addEventListener("resize", () => {
 });
 
 setHeaderState();
+
+loadSiteContent()
+  .then(applyContent)
+  .catch(() => {
+    document.documentElement.classList.add("content-fallback");
+  });
