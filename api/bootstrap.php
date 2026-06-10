@@ -164,7 +164,10 @@ function validate_content(array $content): void
         'campus.heading',
         'tender.title',
         'admission.heading',
-        'contact.heading'
+        'contact.heading',
+        'contact.address',
+        'contact.phone',
+        'contact.email'
     ];
 
     foreach ($required as $path) {

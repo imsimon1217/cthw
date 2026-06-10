@@ -120,6 +120,17 @@ function applyTenderContent(content) {
   }
 }
 
+function applyContactLinks(content) {
+  const phone = content.contact?.phone || "";
+  const email = content.contact?.email || "";
+  document.querySelectorAll("[data-contact-phone]").forEach((link) => {
+    link.href = "tel:" + phone.replace(/\s+/g, "");
+  });
+  document.querySelectorAll("[data-contact-email]").forEach((link) => {
+    link.href = "mailto:" + email;
+  });
+}
+
 function applyContent(content) {
   document.querySelectorAll("[data-content]").forEach((element) => {
     const value = getByPath(content, element.dataset.content);
@@ -128,4 +139,5 @@ function applyContent(content) {
   renderNews(content);
   renderCampus(content);
   applyTenderContent(content);
+  applyContactLinks(content);
 }
