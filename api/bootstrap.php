@@ -183,4 +183,51 @@ function validate_content(array $content): void
     if (!isset($content['news']['items']) || !is_array($content['news']['items'])) {
         json_response(['error' => 'News items must be an array'], 422);
     }
+
+    if (!isset($content['categories']) || !is_array($content['categories'])) {
+        json_response(['error' => 'Categories must be an array'], 422);
+    }
+
+    $categoryIds = [];
+    foreach ($content['categories'] as $category) {
+        if (!is_array($category) || !is_string($category['id'] ?? null) || trim($category['id']) === '' || !is_string($category['title'] ?? null) || trim($category['title']) === '') {
+            json_response(['error' => 'Each category needs an identifier and title'], 422);
+        }
+        if (isset($categoryIds[$category['id']])) {
+            json_response(['error' => 'Category identifiers must be unique'], 422);
+        }
+        if (isset($category['image']) && !is_string($category['image'])) {
+            json_response(['error' => 'Category image paths must be text'], 422);
+        }
+        $categoryIds[$category['id']] = true;
+    }
+
+    foreach ($content['categories'] as $category) {
+        $parentId = $category['parentId'] ?? '';
+        if (!is_string($parentId) || ($parentId !== '' && !isset($categoryIds[$parentId]))) {
+            json_response(['error' => 'Each category parent must exist'], 422);
+        }
+
+        $visited = [$category['id'] => true];
+        while ($parentId !== '') {
+            if (isset($visited[$parentId])) {
+                json_response(['error' => 'Category hierarchy cannot contain a cycle'], 422);
+            }
+            $visited[$parentId] = true;
+            $parent = null;
+            foreach ($content['categories'] as $candidate) {
+                if ($candidate['id'] === $parentId) {
+                    $parent = $candidate;
+                    break;
+                }
+            }
+            $parentId = $parent['parentId'] ?? '';
+        }
+    }
+
+    foreach ($content['news']['items'] as $item) {
+        if (!is_array($item) || !is_string($item['categoryId'] ?? null) || !isset($categoryIds[$item['categoryId']])) {
+            json_response(['error' => 'Each article must belong to an existing category'], 422);
+        }
+    }
 }

@@ -7,6 +7,7 @@ const dashboard = document.querySelector("[data-dashboard]");
 const loginForm = document.querySelector("[data-login-form]");
 const editorForm = document.querySelector("[data-editor-form]");
 const newsEditor = document.querySelector("[data-news-editor]");
+const categoryEditor = document.querySelector("[data-category-editor]");
 const toast = document.querySelector("[data-toast]");
 
 let currentContent;
@@ -49,6 +50,15 @@ function setValueByPath(source, path, value) {
 }
 
 function ensureDefaultCollections(content) {
+  content.categories ||= [];
+  content.categories = content.categories.map((item, index) => ({
+    id: item.id || `category-${index + 1}`,
+    parentId: item.parentId || "",
+    title: item.title || "未命名分類",
+    description: item.description || "",
+    image: item.image || "",
+    visible: item.visible !== false
+  }));
   content.campus ||= {};
   content.campus.images ||= [];
   while (content.campus.images.length < 2) {
@@ -60,6 +70,7 @@ function ensureDefaultCollections(content) {
   content.news.items = content.news.items.map((item, index) => ({
     date: item.date || "最新消息",
     category: item.category || "news",
+    categoryId: item.categoryId || "latest-news",
     slug: item.slug || `article-${index + 1}`,
     title: item.title || "",
     copy: item.copy || "",
@@ -68,6 +79,43 @@ function ensureDefaultCollections(content) {
     linkHref: item.linkHref || "",
     showOnHome: item.showOnHome !== false
   }));
+}
+
+function categoryOptions(categories, selected = "", includeTop = true) {
+  const options = includeTop ? ['<option value="">主分類（不隸屬其他分類）</option>'] : [];
+  categories.forEach((category) => {
+    if (category.id === selected) return;
+    const parent = categories.find((item) => item.id === category.parentId);
+    const label = `${parent ? "— " : ""}${category.title}`;
+    options.push(`<option value="${category.id}">${label}</option>`);
+  });
+  return options.join("");
+}
+
+function renderCategoryEditor(categories = []) {
+  if (!categoryEditor) return;
+  categoryEditor.replaceChildren();
+  categories.forEach((category, index) => {
+    const row = document.createElement("div");
+    row.className = "category-item-editor";
+    row.dataset.categoryIndex = String(index);
+    row.innerHTML = `
+      <label>分類名稱<input data-category-field="title"></label>
+      <label>上層分類<select data-category-field="parentId">${categoryOptions(categories, category.id)}</select></label>
+      <label>分類簡介<textarea data-category-field="description" rows="2"></textarea></label>
+      <label>封面圖片路徑<input data-category-field="image"></label>
+      <label>上載封面圖片<input type="file" accept="image/*" data-category-image-upload></label>
+      <label class="checkbox-label"><input type="checkbox" data-category-field="visible"> 在網站導覽及分類頁顯示</label>
+      <p class="category-id">識別碼：${category.id}</p>
+      <button type="button" class="remove-category" data-remove-category>刪除分類</button>
+    `;
+    row.querySelector('[data-category-field="title"]').value = category.title || "";
+    row.querySelector('[data-category-field="parentId"]').value = category.parentId || "";
+    row.querySelector('[data-category-field="description"]').value = category.description || "";
+    row.querySelector('[data-category-field="image"]').value = category.image || "";
+    row.querySelector('[data-category-field="visible"]').checked = category.visible !== false;
+    categoryEditor.append(row);
+  });
 }
 
 function uniqueArticleSlug(index) {
@@ -90,6 +138,7 @@ function renderNewsEditor(items = []) {
           <option value="admission">入學資訊</option>
         </select>
       </label>
+      <label>所屬網站分類<select data-news-field="categoryId"></select></label>
       <label>日期/分類<input data-news-field="date"></label>
       <label>網址代號<input data-news-field="slug" placeholder="例如 school-open-day"></label>
       <label>標題<input data-news-field="title"></label>
@@ -102,6 +151,9 @@ function renderNewsEditor(items = []) {
       <button type="button" class="remove-news" data-remove-news aria-label="刪除消息">刪除</button>
     `;
     row.querySelector('[data-news-field="category"]').value = item.category || "news";
+    const categorySelect = row.querySelector('[data-news-field="categoryId"]');
+    categorySelect.innerHTML = categoryOptions(currentContent?.categories || [], "", false);
+    categorySelect.value = item.categoryId || "latest-news";
     row.querySelector('[data-news-field="date"]').value = item.date || "";
     row.querySelector('[data-news-field="slug"]').value = item.slug || "";
     row.querySelector('[data-news-field="title"]').value = item.title || "";
@@ -121,6 +173,7 @@ function fillForm(content) {
     const value = getByPath(content, input.name);
     input.value = typeof value === "string" ? value : "";
   });
+  renderCategoryEditor(content.categories || []);
   renderNewsEditor(content.news?.items || []);
 }
 
@@ -136,6 +189,7 @@ function collectForm() {
     return {
       date: value("date"),
       category: value("category") || "news",
+      categoryId: value("categoryId") || "latest-news",
       slug: value("slug") || uniqueArticleSlug(index),
       title: value("title"),
       copy: value("copy"),
@@ -145,7 +199,38 @@ function collectForm() {
       showOnHome: row.querySelector('[data-news-field="showOnHome"]')?.checked !== false
     };
   });
+  nextContent.categories = Array.from(categoryEditor?.querySelectorAll("[data-category-index]") || []).map((row, index) => ({
+    id: currentContent.categories[index]?.id || `category-${Date.now()}-${index + 1}`,
+    parentId: row.querySelector('[data-category-field="parentId"]')?.value || "",
+    title: row.querySelector('[data-category-field="title"]')?.value.trim() || "未命名分類",
+    description: row.querySelector('[data-category-field="description"]')?.value.trim() || "",
+    image: row.querySelector('[data-category-field="image"]')?.value.trim() || "",
+    visible: row.querySelector('[data-category-field="visible"]')?.checked !== false
+  }));
   return nextContent;
+}
+
+function validateContentForSave(content) {
+  const categories = content.categories || [];
+  const byId = new Map();
+  categories.forEach((category) => {
+    if (!category.id || !category.title) throw new Error("每個分類都需要識別碼及名稱。");
+    if (byId.has(category.id)) throw new Error("分類識別碼不可重複。");
+    byId.set(category.id, category);
+  });
+  categories.forEach((category) => {
+    let parentId = category.parentId || "";
+    const visited = new Set([category.id]);
+    while (parentId) {
+      if (!byId.has(parentId)) throw new Error("分類的上層分類不存在。");
+      if (visited.has(parentId)) throw new Error("分類不能形成循環的上下層關係。");
+      visited.add(parentId);
+      parentId = byId.get(parentId).parentId || "";
+    }
+  });
+  (content.news?.items || []).forEach((item) => {
+    if (!byId.has(item.categoryId)) throw new Error("每篇文章必須選擇一個現有網站分類。");
+  });
 }
 
 async function uploadImage(file) {
@@ -163,10 +248,23 @@ async function uploadImage(file) {
 
 function imageToDataUrl(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+    const image = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const maximumDimension = 1600;
+      const scale = Math.min(1, maximumDimension / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.82));
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Unable to prepare image preview"));
+    };
+    image.src = objectUrl;
   });
 }
 
@@ -264,9 +362,14 @@ loginForm?.addEventListener("submit", async (event) => {
 
 editorForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  currentContent = collectForm();
-  const target = await saveContent(currentContent);
-  showToast(target === "server" ? "已儲存到學校 server database。" : "已暫存到本機瀏覽器，可到首頁預覽。");
+  try {
+    currentContent = collectForm();
+    validateContentForSave(currentContent);
+    const target = await saveContent(currentContent);
+    showToast(target === "server" ? "已儲存到學校 server database。" : "已暫存到本機瀏覽器，可到首頁預覽。");
+  } catch (error) {
+    showToast(error.message || "未能儲存內容，請稍後再試。");
+  }
 });
 
 document.querySelector("[data-add-news]")?.addEventListener("click", () => {
@@ -275,6 +378,7 @@ document.querySelector("[data-add-news]")?.addEventListener("click", () => {
   currentContent.news.items.push({
     date: "最新消息",
     category: "news",
+    categoryId: "latest-news",
     slug: uniqueArticleSlug(index),
     title: "請輸入標題",
     copy: "請輸入首頁摘要",
@@ -286,7 +390,31 @@ document.querySelector("[data-add-news]")?.addEventListener("click", () => {
   renderNewsEditor(currentContent.news.items);
 });
 
+document.querySelector("[data-add-category]")?.addEventListener("click", () => {
+  currentContent = collectForm();
+  const id = `category-${Date.now()}`;
+  currentContent.categories.push({ id, parentId: "", title: "請輸入分類名稱", description: "", image: "", visible: true });
+  renderCategoryEditor(currentContent.categories);
+  renderNewsEditor(currentContent.news.items);
+});
+
 editorForm?.addEventListener("change", async (event) => {
+  const categoryImageInput = event.target.closest("[data-category-image-upload]");
+  if (categoryImageInput?.files?.[0]) {
+    const row = categoryImageInput.closest("[data-category-index]");
+    const targetInput = row?.querySelector('[data-category-field="image"]');
+    if (!targetInput) return;
+
+    try {
+      targetInput.value = await uploadImage(categoryImageInput.files[0]);
+      showToast("分類封面圖片已上載到學校 server。");
+    } catch {
+      targetInput.value = await imageToDataUrl(categoryImageInput.files[0]);
+      showToast("分類封面圖片已暫存到本機預覽。");
+    }
+    return;
+  }
+
   const newsImageInput = event.target.closest("[data-news-image-upload]");
   if (newsImageInput?.files?.[0]) {
     const row = newsImageInput.closest("[data-news-index]");
@@ -330,6 +458,24 @@ newsEditor?.addEventListener("click", (event) => {
   const row = button.closest("[data-news-index]");
   const index = Number(row.dataset.newsIndex);
   currentContent.news.items.splice(index, 1);
+  renderNewsEditor(currentContent.news.items);
+});
+
+categoryEditor?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-remove-category]");
+  if (!button) return;
+  currentContent = collectForm();
+  const row = button.closest("[data-category-index]");
+  const index = Number(row.dataset.categoryIndex);
+  const category = currentContent.categories[index];
+  if (!category) return;
+  const destination = category.parentId || "latest-news";
+  const hasDependents = currentContent.categories.some((item) => item.parentId === category.id) || currentContent.news.items.some((item) => item.categoryId === category.id);
+  if (hasDependents && !window.confirm(`「${category.title}」之下的子分類及文章會移至上一層分類，確定刪除？`)) return;
+  currentContent.categories.forEach((item) => { if (item.parentId === category.id) item.parentId = category.parentId || ""; });
+  currentContent.news.items.forEach((item) => { if (item.categoryId === category.id) item.categoryId = destination; });
+  currentContent.categories.splice(index, 1);
+  renderCategoryEditor(currentContent.categories);
   renderNewsEditor(currentContent.news.items);
 });
 

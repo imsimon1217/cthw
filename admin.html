@@ -15,7 +15,7 @@
         <div>
           <p class="kicker">YCHCTHWPS CMS</p>
           <h1>學校網站後台</h1>
-          <p>老師可在這裏更新首頁文字、最新消息、入學資訊及聯絡提示。</p>
+          <p>老師可在這裏管理網站分類、文章、圖片及首頁內容。</p>
         </div>
 
         <form class="login-card" data-login-form>
@@ -40,8 +40,9 @@
           <img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學校徽">
           <nav aria-label="後台分區">
             <a href="#hero">首頁主視覺</a>
+            <a href="#categories">網站分類</a>
             <a href="#about">關於趙小</a>
-            <a href="#news">最新消息</a>
+            <a href="#news">文章及內容</a>
             <a href="#campus">校園環境</a>
             <a href="#tender">招標公告</a>
             <a href="#admission">入學資訊</a>
@@ -66,6 +67,13 @@
 
           <p class="notice" data-mode-notice>如果網站放在支援 PHP 的學校 server，後台會把資料寫入 server database；本地靜態預覽時會暫存在目前瀏覽器，方便校方試流程。</p>
 
+          <section class="panel" id="categories">
+            <h2>網站分類</h2>
+            <p>管理主分類及子分類。文章可在下方「文章及內容」選擇所屬分類；刪除分類時，當中的文章會移至上一層分類。</p>
+            <div class="category-editor" data-category-editor></div>
+            <button type="button" class="outline" data-add-category>新增分類</button>
+          </section>
+
           <section class="panel" id="hero">
             <h2>首頁主視覺</h2>
             <label>英文副標<input name="hero.eyebrow"></label>
@@ -81,7 +89,7 @@
           </section>
 
           <section class="panel" id="news">
-            <h2>最新消息及文章</h2>
+            <h2>文章及內容</h2>
             <label>區塊標題<input name="news.heading"></label>
             <div class="subpanel">
               <h3>重點消息</h3>
@@ -92,7 +100,7 @@
               <label>連結<input name="news.featured.linkHref"></label>
             </div>
             <div class="subpanel">
-              <h3>文章/公告管理</h3>
+              <h3>文章／公告管理</h3>
               <div class="news-editor" data-news-editor></div>
               <button type="button" class="outline" data-add-news>新增文章/公告</button>
             </div>
@@ -157,7 +165,7 @@
 
     <div class="toast" data-toast hidden>已儲存內容。</div>
 
-    <script src="content-manager.js?v=20260611a"></script>
-    <script src="admin.js?v=20260611a"></script>
+    <script src="content-manager.js?v=20260917a"></script>
+    <script src="admin.js?v=20260917a"></script>
   </body>
 </html>

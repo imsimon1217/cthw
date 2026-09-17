@@ -276,6 +276,12 @@ textarea {
   font-size: 1.8rem;
 }
 
+.panel > p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
 .subpanel {
   display: grid;
   gap: 16px;
@@ -292,6 +298,40 @@ textarea {
 .news-editor {
   display: grid;
   gap: 14px;
+}
+
+.category-editor {
+  display: grid;
+  gap: 14px;
+}
+
+.category-item-editor {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.category-item-editor > label:nth-child(3),
+.category-item-editor .checkbox-label {
+  grid-column: 1 / -1;
+}
+
+.category-id {
+  margin: 0;
+  align-self: center;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+.remove-category {
+  color: var(--crimson);
+  background: white;
+  border: 1px solid rgba(179, 33, 43, 0.28);
 }
 
 .news-item-editor {
@@ -379,6 +419,10 @@ textarea {
   }
 
   .news-item-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .category-item-editor {
     grid-template-columns: 1fr;
   }
 

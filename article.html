@@ -26,9 +26,9 @@
         <a class="brand" href="index.html" aria-label="仁濟醫院趙曾學韞小學首頁">
           <img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學校徽">
         </a>
-        <div class="nav-links tender-nav">
-          <a href="index.html#news">返回最新消息</a>
-          <a href="tender.html">招標公告</a>
+        <div class="nav-links tender-nav" data-primary-nav>
+          <a href="category.html?category=school-information">學校資訊</a>
+          <a href="category.html?category=school-life">學校生活</a>
           <a href="index.html">返回首頁</a>
         </div>
       </nav>
@@ -51,12 +51,12 @@
           <p class="date" data-article-date></p>
           <h2 data-article-title>公告詳情</h2>
           <p data-article-body>請稍候，正在載入公告內容。</p>
-          <a class="card-link" href="index.html#news">返回最新消息</a>
+          <a class="card-link" data-article-back href="index.html#news">返回最新消息</a>
         </article>
       </section>
     </main>
 
-    <script src="content-manager.js?v=20260611a"></script>
+    <script src="content-manager.js?v=20260917a"></script>
     <script>
       loadSiteContent().then(applyContent);
     </script>
