@@ -155,6 +155,7 @@ function verify_admin_login(array $config, string $username, string $password): 
 
 function validate_content(array $content): void
 {
+    validate_rotation($content['hero']['imageRotation'] ?? 0);
     $required = [
         'hero.title',
         'hero.copy',
@@ -200,6 +201,12 @@ function validate_content(array $content): void
             json_response(['error' => 'Category image paths must be text'], 422);
         }
         $categoryIds[$category['id']] = true;
+        if (!in_array($category['layout'] ?? 'editorial', ['editorial', 'community', 'news', 'gallery', 'resources', 'admission', 'contact'], true)) {
+            json_response(['error' => 'Invalid category layout'], 422);
+        }
+        validate_blocks($category['blocks'] ?? []);
+        validate_images($category['heroImages'] ?? []);
+        validate_rotation($category['imageRotation'] ?? 0);
     }
 
     foreach ($content['categories'] as $category) {
@@ -225,9 +232,69 @@ function validate_content(array $content): void
         }
     }
 
+    $slugs = [];
     foreach ($content['news']['items'] as $item) {
         if (!is_array($item) || !is_string($item['categoryId'] ?? null) || !isset($categoryIds[$item['categoryId']])) {
             json_response(['error' => 'Each article must belong to an existing category'], 422);
         }
+        $slug = $item['slug'] ?? '';
+        if (!is_string($slug) || $slug === '' || isset($slugs[$slug]) || !is_string($item['title'] ?? null) || trim($item['title']) === '') {
+            json_response(['error' => 'Each article needs a title and unique URL identifier'], 422);
+        }
+        $slugs[$slug] = true;
+        if (!in_array($item['status'] ?? 'published', ['draft', 'published'], true)) {
+            json_response(['error' => 'Invalid publication status'], 422);
+        }
+        validate_blocks($item['blocks'] ?? []);
+        validate_rotation($item['imageRotation'] ?? 0);
+    }
+}
+
+function validate_blocks($blocks): void
+{
+    if (!is_array($blocks)) {
+        json_response(['error' => 'Content blocks must be an array'], 422);
+    }
+    foreach ($blocks as $block) {
+        if (!is_array($block) || !in_array($block['type'] ?? '', ['text', 'image', 'feature', 'gallery', 'callout', 'list', 'steps', 'links', 'faq'], true)) {
+            json_response(['error' => 'Invalid content block'], 422);
+        }
+        validate_rotation($block['rotation'] ?? 0);
+        foreach (['heading', 'text', 'src', 'caption', 'alt', 'href', 'label'] as $field) {
+            if (isset($block[$field]) && !is_string($block[$field])) json_response(['error' => 'Block fields must be text'], 422);
+        }
+        if ($block['type'] === 'gallery') {
+            validate_images($block['images'] ?? []);
+            if (!is_array($block['images'] ?? null)) json_response(['error' => 'Gallery images must be an array'], 422);
+            foreach ($block['images'] as $image) {
+                if (!is_array($image) || !is_string($image['src'] ?? null) || $image['src'] === '') json_response(['error' => 'Each gallery image needs a source'], 422);
+                foreach (['caption', 'alt'] as $field) if (isset($image[$field]) && !is_string($image[$field])) json_response(['error' => 'Image captions must be text'], 422);
+            }
+        }
+        if (in_array($block['type'], ['list', 'steps', 'faq'], true)) {
+            if (!is_array($block['items'] ?? null)) json_response(['error' => 'List items must be an array'], 422);
+            foreach ($block['items'] as $line) if (!is_string($line)) json_response(['error' => 'List items must be text'], 422);
+        }
+        if ($block['type'] === 'links') {
+            if (!is_array($block['links'] ?? null)) json_response(['error' => 'Links must be an array'], 422);
+            foreach ($block['links'] as $link) {
+                if (!is_array($link) || !is_string($link['label'] ?? null) || !is_string($link['href'] ?? null) || trim($link['label']) === '' || trim($link['href']) === '') json_response(['error' => 'Each link needs a label and URL'], 422);
+            }
+        }
+    }
+}
+
+function validate_rotation($rotation): void
+{
+    if (!in_array($rotation, [0, 90, 180, 270], true)) json_response(['error' => 'Image rotation must be 0, 90, 180 or 270'], 422);
+}
+
+function validate_images($images): void
+{
+    if (!is_array($images)) json_response(['error' => 'Images must be an array'], 422);
+    foreach ($images as $image) {
+        if (!is_array($image) || !is_string($image['src'] ?? null) || trim($image['src']) === '') json_response(['error' => 'Each image needs a source'], 422);
+        foreach (['caption', 'alt'] as $field) if (isset($image[$field]) && !is_string($image[$field])) json_response(['error' => 'Image captions must be text'], 422);
+        validate_rotation($image['rotation'] ?? 0);
     }
 }

@@ -1,171 +1,98 @@
 <!doctype html>
 <html lang="zh-Hant-HK">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>網站後台 | 仁濟醫院趙曾學韞小學</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&family=Noto+Serif+HK:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>內容工作室 | 趙小老師後台</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&family=Noto+Serif+HK:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="studio.css?v=20260918b" />
+    <link rel="stylesheet" href="media.css?v=20260918b" />
   </head>
   <body>
-    <main class="admin-shell">
-      <section class="login-panel" data-login-panel>
-        <div>
-          <p class="kicker">YCHCTHWPS CMS</p>
-          <h1>學校網站後台</h1>
-          <p>老師可在這裏管理網站分類、文章、圖片及首頁內容。</p>
-        </div>
-
-        <form class="login-card" data-login-form>
-          <img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學校徽">
-          <label>
-            使用者名稱
-            <input name="username" autocomplete="username" value="teacher" required>
-          </label>
-          <label>
-            密碼
-            <input name="password" type="password" autocomplete="current-password" placeholder="請輸入後台密碼" required>
-          </label>
-          <p class="hint">展示密碼：<strong>ych2026</strong>。正式上線前應由學校 IT 在 server 設定正式帳戶。</p>
-          <p class="error" data-login-error hidden>登入資料不正確。</p>
-          <button type="submit">登入後台</button>
-          <a href="index.html">返回網站首頁</a>
-        </form>
-      </section>
-
-      <section class="dashboard" data-dashboard hidden>
-        <aside class="sidebar">
-          <img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學校徽">
-          <nav aria-label="後台分區">
-            <a href="#hero">首頁主視覺</a>
-            <a href="#categories">網站分類</a>
-            <a href="#about">關於趙小</a>
-            <a href="#news">文章及內容</a>
-            <a href="#campus">校園環境</a>
-            <a href="#tender">招標公告</a>
-            <a href="#admission">入學資訊</a>
-            <a href="#contact">聯絡提示</a>
-          </nav>
-          <button type="button" class="ghost" data-logout>登出</button>
-        </aside>
-
-        <form class="editor" data-editor-form>
-          <header class="editor-header">
-            <div>
-              <p class="kicker">Content Editor</p>
-              <h1>更新網站內容</h1>
-            </div>
-            <div class="header-actions">
-              <a class="outline" href="index.html" target="_blank" rel="noreferrer">預覽首頁</a>
-              <button type="button" class="outline" data-reset>重設</button>
-              <button type="button" class="outline" data-logout>登出</button>
-              <button type="submit">儲存</button>
-            </div>
-          </header>
-
-          <p class="notice" data-mode-notice>如果網站放在支援 PHP 的學校 server，後台會把資料寫入 server database；本地靜態預覽時會暫存在目前瀏覽器，方便校方試流程。</p>
-
-          <section class="panel" id="categories">
-            <h2>網站分類</h2>
-            <p>管理主分類及子分類。文章可在下方「文章及內容」選擇所屬分類；刪除分類時，當中的文章會移至上一層分類。</p>
-            <div class="category-editor" data-category-editor></div>
-            <button type="button" class="outline" data-add-category>新增分類</button>
-          </section>
-
-          <section class="panel" id="hero">
-            <h2>首頁主視覺</h2>
-            <label>英文副標<input name="hero.eyebrow"></label>
-            <label>主標題<input name="hero.title"></label>
-            <label>首頁簡介<textarea name="hero.copy" rows="3"></textarea></label>
-          </section>
-
-          <section class="panel" id="about">
-            <h2>關於趙小</h2>
-            <label>區塊標題<input name="about.heading"></label>
-            <label>段落一<textarea name="about.paragraph1" rows="3"></textarea></label>
-            <label>段落二<textarea name="about.paragraph2" rows="3"></textarea></label>
-          </section>
-
-          <section class="panel" id="news">
-            <h2>文章及內容</h2>
-            <label>區塊標題<input name="news.heading"></label>
-            <div class="subpanel">
-              <h3>重點消息</h3>
-              <label>日期/分類<input name="news.featured.date"></label>
-              <label>標題<input name="news.featured.title"></label>
-              <label>內容<textarea name="news.featured.copy" rows="4"></textarea></label>
-              <label>連結文字<input name="news.featured.linkLabel"></label>
-              <label>連結<input name="news.featured.linkHref"></label>
-            </div>
-            <div class="subpanel">
-              <h3>文章／公告管理</h3>
-              <div class="news-editor" data-news-editor></div>
-              <button type="button" class="outline" data-add-news>新增文章/公告</button>
-            </div>
-          </section>
-
-          <section class="panel" id="campus">
-            <h2>校園環境</h2>
-            <label>區塊標題<input name="campus.heading"></label>
-            <label>區塊簡介<textarea name="campus.copy" rows="3"></textarea></label>
-            <div class="subpanel">
-              <h3>圖片一</h3>
-              <label>圖片路徑<input name="campus.images.0.src"></label>
-              <label>替代文字<input name="campus.images.0.alt"></label>
-              <label>圖片標題<input name="campus.images.0.title"></label>
-              <label>上載圖片<input type="file" accept="image/*" data-image-upload data-image-target="campus.images.0.src"></label>
-            </div>
-            <div class="subpanel">
-              <h3>圖片二</h3>
-              <label>圖片路徑<input name="campus.images.1.src"></label>
-              <label>替代文字<input name="campus.images.1.alt"></label>
-              <label>圖片標題<input name="campus.images.1.title"></label>
-              <label>上載圖片<input type="file" accept="image/*" data-image-upload data-image-target="campus.images.1.src"></label>
-            </div>
-          </section>
-
-          <section class="panel" id="tender">
-            <h2>招標及行政公告頁</h2>
-            <label>英文/分類副標<input name="tender.eyebrow"></label>
-            <label>頁面標題<input name="tender.title"></label>
-            <label>頁面摘要<textarea name="tender.summary" rows="3"></textarea></label>
-            <label>頁面圖片路徑<input name="tender.image"></label>
-            <label>圖片替代文字<input name="tender.imageAlt"></label>
-            <label>上載頁面圖片<input type="file" accept="image/*" data-image-upload data-image-target="tender.image"></label>
-            <label>詳細內容<textarea name="tender.content" rows="7"></textarea></label>
-            <label>查詢資料<textarea name="tender.contact" rows="3"></textarea></label>
-          </section>
-
-          <section class="panel" id="admission">
-            <h2>入學資訊</h2>
-            <label>標題<input name="admission.heading"></label>
-            <label>內容<textarea name="admission.copy" rows="4"></textarea></label>
-          </section>
-
-          <section class="panel" id="contact">
-            <h2>聯絡資料</h2>
-            <label>標題<input name="contact.heading"></label>
-            <label>簡介<textarea name="contact.copy" rows="3"></textarea></label>
-            <label>地址<input name="contact.address"></label>
-            <label>電話<input name="contact.phone"></label>
-            <label>傳真<input name="contact.fax"></label>
-            <label>電郵<input name="contact.email"></label>
-          </section>
-
-          <section class="panel export-panel">
-            <h2>匯出正式內容</h2>
-            <p>按下匯出後，會下載一份新的 `site-content.json`。正式網站可把它放回 `data/site-content.json` 取代舊內容。</p>
-            <button type="button" class="outline" data-export>下載 JSON</button>
-          </section>
-        </form>
-      </section>
-    </main>
-
-    <div class="toast" data-toast hidden>已儲存內容。</div>
-
-    <script src="content-manager.js?v=20260917a"></script>
-    <script src="admin.js?v=20260917a"></script>
+    <section class="login-panel" data-login-panel>
+      <div>
+        <p class="kicker">YCH · CONTENT STUDIO</p>
+        <h1>讓校園故事<br />繼續生長。</h1>
+        <p>
+          選擇分類，寫一篇消息，或分享整輯相片。<br />網站會按內容自動排版。
+        </p>
+      </div>
+      <form class="login-card" data-login-form>
+        <img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學" /><label
+          >使用者名稱<input
+            name="username"
+            autocomplete="username"
+            value="teacher"
+            required /></label
+        ><label
+          >密碼<input
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            required
+        /></label>
+        <p class="hint" data-demo-hint hidden>
+          本機示範帳戶：teacher ／ ych2026
+        </p>
+        <p class="error" data-login-error hidden></p>
+        <button type="submit">登入內容工作室</button
+        ><a href="index.html">返回網站</a>
+      </form>
+    </section>
+    <div class="studio" data-dashboard hidden>
+      <aside class="studio-sidebar">
+        <a href="index.html"
+          ><img src="assets/school-logo.png" alt="學校首頁"
+        /></a>
+        <p class="kicker">網站內容分類</p>
+        <nav data-category-tree aria-label="網站分類"></nav>
+        <button type="button" class="outline" data-add-category>
+          ＋ 新增分類</button
+        ><button type="button" class="outline" data-settings>
+          首頁及聯絡設定</button
+        ><button type="button" class="outline" data-help>操作小提示</button
+        ><button type="button" class="outline" data-logout>登出</button>
+      </aside>
+      <main class="studio-main">
+        <header class="studio-header">
+          <div>
+            <p class="kicker">CONTENT STUDIO</p>
+            <h1 data-workspace-title>內容工作室</h1>
+            <p data-save-state aria-live="polite">已載入內容</p>
+          </div>
+          <div class="studio-actions">
+            <button class="outline" type="button" data-undo hidden>
+              復原移除</button
+            ><button class="outline" type="button" data-preview>
+              預覽頁面 ↗</button
+            ><button type="button" data-save>儲存所有修改</button>
+          </div>
+        </header>
+        <p class="mode-notice" data-mode-notice></p>
+        <div data-workspace></div>
+      </main>
+    </div>
+    <dialog class="help-dialog" data-help-dialog>
+      <h2>更新網站，只需三步</h2>
+      <ol>
+        <li>在左邊選擇網站分類。分類名稱與前台相同。</li>
+        <li>
+          按「新增文章」或「新增相簿」，填寫標題，再加入文字、圖片、相簿、文件或步驟。
+        </li>
+        <li>選擇「已發布」並按「儲存所有修改」。草稿只在後台及預覽顯示。</li>
+      </ol>
+      <p>
+        相簿可一次選取多張相片，每張都有獨立說明；上下箭嘴可調整相片、段落及文章次序。分類設定可更改前台版面。
+      </p>
+      <p>新增內容沒有固定張數或篇數限制；實際容量以瀏覽器或學校伺服器為準。</p>
+      <button type="button" data-close-help>明白</button>
+    </dialog>
+    <div class="toast" data-toast role="status" hidden></div>
+    <script src="content-manager.js?v=20260918b"></script>
+    <script src="admin.js?v=20260918b"></script>
   </body>
 </html>

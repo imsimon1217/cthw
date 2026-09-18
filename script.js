@@ -38,4 +38,8 @@ loadSiteContent()
   .then(applyContent)
   .catch(() => {
     document.documentElement.classList.add("content-fallback");
+    const page = document.querySelector("[data-page-content]");
+    if (page)
+      page.innerHTML =
+        '<div class="page-missing"><h1>暫時未能載入內容</h1><p>請重新整理頁面，或稍後再試。</p><a href="index.html">返回首頁 →</a></div>';
   });

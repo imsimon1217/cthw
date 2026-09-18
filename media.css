@@ -1,0 +1,60 @@
+/* Pixel-preserving display rotation. Original school photos are never rewritten. */
+.oriented-media {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background: #e9e5db;
+}
+.oriented-media > img {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  max-width: none !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+  transform: translate(-50%, -50%) rotate(var(--image-angle));
+}
+.photo-open > .oriented-media {
+  position: relative;
+  inset: auto;
+  padding: 0;
+  width: 100%;
+  height: 300px;
+  background: #e9e5db;
+}
+.photo-viewer .oriented-media {
+  height: 70svh;
+  width: 100%;
+}
+.oriented-media.asset-preview {
+  width: 140px;
+  height: 120px;
+}
+.oriented-media.row-thumbnail {
+  width: 58px;
+  height: 58px;
+}
+.story-cover .oriented-media {
+  height: 520px;
+}
+.hero .oriented-media.hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero .oriented-media.hero-image > img {
+  object-fit: cover !important;
+}
+@media (max-width: 600px) {
+  .photo-open > .oriented-media {
+    height: 240px;
+  }
+  .story-cover .oriented-media {
+    height: 340px;
+  }
+}

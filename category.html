@@ -1,29 +1,76 @@
 <!doctype html>
 <html lang="zh-Hant-HK">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>內容分類 | 仁濟醫院趙曾學韞小學</title>
-    <meta name="description" content="仁濟醫院趙曾學韞小學網站內容分類。">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&family=Noto+Serif+HK:wght@600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>趙小校園 | 仁濟醫院趙曾學韞小學</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&family=Noto+Serif+HK:wght@600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260918b" />
+    <link rel="stylesheet" href="editorial.css?v=20260918b" />
+    <link rel="stylesheet" href="media.css?v=20260918b" />
   </head>
   <body data-category-page>
-    <header class="site-header is-scrolled">
-      <div class="utility-bar"><div class="container utility-inner"><span>尊仁濟世 · 全人教育 · 均衡發展</span><div class="utility-links"><a href="index.html#contact">聯絡學校</a></div></div></div>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+    <header class="site-header is-scrolled" data-header>
+      <div class="utility-bar">
+        <div class="container utility-inner">
+          <span>尊仁濟世 · 全人教育 · 均衡發展</span>
+          <div class="utility-links">
+            <a
+              href="https://eclass.ychcthwps.edu.hk/templates/"
+              target="_blank"
+              rel="noreferrer"
+              >eClass</a
+            ><a href="category.html?category=contact-us">聯絡學校</a>
+          </div>
+        </div>
+      </div>
       <nav class="container nav-shell" aria-label="主要導覽">
-        <a class="brand" href="index.html" aria-label="仁濟醫院趙曾學韞小學首頁"><img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學校徽"></a>
-        <div class="nav-links tender-nav" data-primary-nav><a href="category.html?category=school-information">學校資訊</a></div>
+        <a class="brand" href="index.html" aria-label="仁濟醫院趙曾學韞小學首頁"
+          ><img src="assets/school-logo.png" alt="仁濟醫院趙曾學韞小學"
+        /></a>
+        <button
+          class="menu-toggle"
+          type="button"
+          data-menu-toggle
+          aria-label="開啟選單"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div
+          class="nav-links"
+          id="main-navigation"
+          data-primary-nav
+          data-menu
+        ></div>
       </nav>
     </header>
-    <main class="subpage-main">
-      <section class="subpage-hero"><div class="container category-hero-grid"><div><p class="section-kicker" data-category-trail></p><h1 data-category-title>內容分類</h1><p data-category-description>請稍候，正在載入內容。</p></div><img class="category-hero-image" data-category-image src="assets/campus-courtyard.jpg" alt="分類封面"></div></section>
-      <section class="section"><div class="container"><div class="category-child-grid" data-category-children></div><div class="article-list" data-category-articles></div></div></section>
+    <main id="main" class="journal-main" data-page-content>
+      <p class="container loading-message">正在載入校園內容…</p>
     </main>
-    <footer class="footer"><div class="container footer-bottom"><span>© 2026 仁濟醫院趙曾學韞小學</span><a href="index.html">返回首頁</a></div></footer>
-    <script src="content-manager.js?v=20260917a"></script>
-    <script>loadSiteContent().then(applyContent);</script>
+    <footer class="journal-footer">
+      <div class="container">
+        <div>
+          <p class="journal-kicker">LEARN · EXPLORE · BELONG</p>
+          <h2>每一步成長，都值得被看見。</h2>
+          <p>仁濟醫院趙曾學韞小學</p>
+        </div>
+        <div>
+          <a href="category.html?category=admission">入學申請 ↗</a
+          ><a href="category.html?category=contact-us">聯絡學校 ↗</a
+          ><a href="index.html">返回首頁 ↗</a>
+        </div>
+      </div>
+      <p class="container copyright">© 2026 仁濟醫院趙曾學韞小學</p>
+    </footer>
+    <script src="content-manager.js?v=20260918b"></script>
+    <script src="script.js?v=20260918b"></script>
   </body>
 </html>
